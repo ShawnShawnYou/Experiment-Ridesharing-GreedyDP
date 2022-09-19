@@ -15,6 +15,13 @@ using namespace std;
 #include "monitor.h"
 #endif
 
+
+/**
+ * pid: id
+ * cap: capacity
+ * num: num of orders
+ *
+ */
 struct Worker {
 	int pid, num, cap, gid, vid;
 	double tim;
@@ -34,6 +41,16 @@ struct Worker {
 	}
 };
 
+
+/**
+ * s: start node
+ * e: end node
+ * com: capacity?
+ * tim: request timestamp
+ * len: dist(s,t)
+ * ddl: tim + len + 600
+ * pr: penalty rate 10
+ */
 struct Request {
 	int s, e, com;
 	double tim, ddl, pr, len;

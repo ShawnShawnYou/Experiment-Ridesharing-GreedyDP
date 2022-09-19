@@ -56,16 +56,17 @@ void pruneGDP() {
 }
 
 int main(int argc, char **args) {
-	if (argc > 4) vertexFile = string(args[1]);
-	if (argc > 4) edgeFile = string(args[2]);
-	if (argc > 4) pathLabelFile = string(args[3]);
-	if (argc > 4) orderFile = string(args[4]);
-	if (argc > 5) dataFile = string(args[5]);
-	if (argc > 6) requestFile = string(args[6]);
-	if (argc > 7) {
-		desFile = string(args[7]);
-		freopen(desFile.c_str(), "w", stdout);
-	}
+    string directory = "E:/workspace/A-Experiment-dataset/pruneGDP_data";
+    string root = directory + "/data/chengdu/chengdu";
+    vertexFile = root + ".node";
+    edgeFile = root + ".edge";
+    pathLabelFile = root + ".label";
+    orderFile = root + ".order";
+    dataFile = root + "_taxi.txt";
+    requestFile = root + "_order.txt";
+    //	desFile = root + "_res.txt";
+    //	freopen(desFile.c_str(), "w", stdout);
+
 
 	readInput();
 	
