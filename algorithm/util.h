@@ -19,8 +19,10 @@ using namespace std;
 /**
  * pid: id
  * cap: capacity
- * num: num of orders
+ * num: sum of order.com
+ * tim: now time
  *
+ * w.S[0] & 1: 判断是否结束了
  */
 struct Worker {
 	int pid, num, cap, gid, vid;
@@ -46,7 +48,7 @@ struct Worker {
  * s: start node
  * e: end node
  * com: capacity?
- * tim: request timestamp
+ * tim: release timestamp?
  * len: dist(s,t)
  * ddl: tim + len + 600
  * pr: penalty rate 10
@@ -59,8 +61,15 @@ struct Request {
 extern const int MAX_NODE ;
 extern int nV, m, c, n;
 extern double gridL, alpha;
+
+/**
+ * ans: served order cost
+ * Penalty: reject penalty cost
+ * ans + Penalty = unified cost
+ */
 extern double ans;
 extern double Penalty;
+
 extern ShortestPath *sssp;
 extern Worker* W;
 extern Request* R;
@@ -71,6 +80,13 @@ extern double dispatchTime;
 extern int true_enum, tot_enum;
 extern double pruneRate;
 extern double gridrate;
+
+/**
+ * pos: request iter
+ * cnt: count served orders
+ * qcnt: Saved shortest distance total
+ */
+extern double extra_waiting_time_cnt;
 extern int pos, cnt, mcnt;
 extern double qcnt;
 extern long long min_qcnt, max_qcnt;

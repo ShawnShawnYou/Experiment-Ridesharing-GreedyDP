@@ -8,7 +8,7 @@ using namespace std;
 #include "util.h"
 
 void pruneGDP() {
-	while (pos < n) {
+	while (pos < 10000) {
 #ifdef WATCH_MEM
 		if (pos % 20000 == 0) {
 			watchSolutionOnce(getpid(), usedMemory);
@@ -56,7 +56,7 @@ void pruneGDP() {
 }
 
 int main(int argc, char **args) {
-    string directory = "E:/workspace/A-Experiment-dataset/pruneGDP_data";
+    string directory = "/root/xyzhong/experiment/ridesharing_dataset/";
     string root = directory + "/data/chengdu/chengdu";
     vertexFile = root + ".node";
     edgeFile = root + ".edge";

@@ -19,6 +19,7 @@ double dispatchTime = 0;
 int true_enum = 0, tot_enum = 0;
 double pruneRate = 0;
 double gridrate = 0;
+double extra_waiting_time_cnt = 0;
 int pos = 0;
 int cnt = 0;
 int mcnt = 0;
@@ -231,6 +232,9 @@ inline double det(int a, int b, int c, int d) {
 	return dist(a, b) + dist(b, c) + dist(c, d) - dist(a, d);
 }
 
+/**
+ * 在正式insert进去后 更新driver的slack等信息
+ */
 void updateDriverArr(Worker& w) {
 	double tim = w.tim;
 	vector<double>& reach = w.reach;
@@ -592,10 +596,12 @@ void insertion(Worker &w, int rid, int wid) {
 		for (int j = 0; j < ins.first; ++ j) {
 			ret.push_back(w.S[j]);
 		}
+		// insert start: rid * 2
 		ret.push_back(rid << 1);
 		for (int j = ins.first; j < ins.second; ++ j) {
 			ret.push_back(w.S[j]);
 		}
+		// insert end: rid * 2 + 1
 		ret.push_back(rid << 1 | 1);
 		for (int j = ins.second; j < w.S.size(); ++ j) {
 			ret.push_back(w.S[j]);
@@ -673,23 +679,30 @@ void dumpResult(const char* execName) {
 	printf("Saved shortest distance: tot = %.1lf, avg = %.1lf, min = %lld, max = %lld\n", qcnt, qcnt/pos, min_qcnt, max_qcnt);
 	printf("Queried shortest distance: tot = %.0lf\n", sssp->sdqn);
 	printf("Queried shortest path: tot = %.0lf\n", sssp->spqn);
+	printf("%.4lf\n", extra_waiting_time_cnt / pos);
 #ifdef WATCH_MEM
 	watchSolutionOnce(getpid(), usedMemory);
 	printf("Memory: %.4lf\n", usedMemory/1024.0);
 #endif
 }
 
+/**
+ * 每一轮check driver的状态
+ */
 void updateDriver(int i, double t) {
 	Worker& w = W[i];
 
 	while (w.S.size() > 0 && w.tim < t) {
 		updateGrid(w.pid, i, -1);
 		double tmp = w.reach[0] - w.tim; // == dist(w.pid, Pos(w.S[0]))
+		// TODO ans = release_time - finish_time
 		ans += alpha * tmp;
 		w.tim += tmp;
 		w.pid = Pos(w.S[0]);
 		updateGrid(w.pid, i, 1);
 		if (w.S[0] & 1) {
+		    double order_finish_time = w.reach[0] - R[w.S[0] >> 1].tim;
+		    extra_waiting_time_cnt += (order_finish_time - R[w.S[0] >> 1].len);
 			w.num -= R[w.S[0] >> 1].com;
 			mcnt ++;
 		} else {
